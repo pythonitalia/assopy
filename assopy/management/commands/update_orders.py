@@ -2,8 +2,6 @@
 from django.db import transaction
 from django.db.models import Q
 from django.core.management.base import BaseCommand, CommandError
-from assopy import models
-from assopy.clients import genro
 
 import datetime
 import logging
@@ -28,6 +26,8 @@ class Command(BaseCommand):
         ),
     )
     def handle(self, *args, **options):
+        from assopy import models
+        from assopy.clients import genro
         try:
             action = getattr(self, '_' + args[0])
         except (IndexError, AttributeError):

@@ -8,7 +8,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.core.urlresolvers import reverse
 
-from assopy import models
 
 class Command(BaseCommand):
     help = "generazione voucher"
@@ -27,6 +26,7 @@ class Command(BaseCommand):
         ),
     )
     def handle(self, *args, **options):
+        from assopy import models
         try:
             conf = args[0]
         except IndexError:

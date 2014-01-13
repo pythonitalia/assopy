@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
-from conference import models
-from assopy.clients import genro
 
 class Command(BaseCommand):
     help = "Sincronizza le tariffe presenti in conference con il backend remoto"
     def handle(self, *args, **options):
+        from conference import models
+        from assopy.clients import genro
         try:
             conf = args[0]
         except IndexError:
