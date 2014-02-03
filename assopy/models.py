@@ -245,8 +245,8 @@ class UserIdentityManager(models.Manager):
         try:
             identifier.display_name = profile['name']['formatted']
         except KeyError:
-            identifier.display_name = profile.get('displayName')
-        identifier.gender = profile.get('gender')
+            identifier.display_name = profile.get('displayName', user.username)
+        identifier.gender = profile.get('gender', '')
 
         if 'birthday' in profile:
             birthday = profile.get('birthday', '').split('-')
@@ -257,9 +257,9 @@ class UserIdentityManager(models.Manager):
             identifier.email = profile['verifiedEmail']
         except KeyError:
             identifier.email = profile.get('email')
-        identifier.url = profile.get('url')
-        identifier.photo = profile.get('photo')
-        identifier.phoneNumber = profile.get('phoneNumber')
+        identifier.url = profile.get('url', '')
+        identifier.photo = profile.get('photo', '')
+        identifier.phoneNumber = profile.get('phoneNumber', '')
         try:
             identifier.address = profile['address']['formatted']
         except KeyError:
