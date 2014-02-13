@@ -25,7 +25,7 @@ class _AssopyBackend(ModelBackend):
             return user
         name = unicode(user.user).encode('utf-8')
         if not user.user.is_active:
-            log.info('cannot link a remote user to "%s": it\'s not active', name) 
+            log.info('cannot link a remote user to "%s": it\'s not active', name)
             return
 
         log.info('a remote user is needed for "%s"', name)
@@ -73,18 +73,20 @@ class IdBackend(_AssopyBackend):
     def authenticate(self, uid=None):
         try:
             user = User.objects.select_related('assopy_user').get(pk=uid, is_active=True)
-            auser = user.assopy_user
-            if auser is None:
-                # questo utente esiste su django ma non ha un utente assopy
-                # collegato; probabilmente è un admin inserito prima del
-                # collegamento con il backend.
-                auser = models.User(user=user)
-                auser.save()
-                models.user_created.send(sender=auser, profile_complete=True)
-            self.linkUser(auser)
-            return user
         except User.DoesNotExist:
             return None
+        try:
+            auser = user.assopy_user
+        except models.User.DoesNotExist:
+            # questo utente esiste su django ma non ha un utente assopy
+            # collegato; probabilmente è un admin inserito prima del
+            # collegamento con il backend.
+            auser = models.User(user=user)
+            auser.save()
+            models.user_created.send(sender=auser, profile_complete=True)
+        self.linkUser(auser)
+        return user
+
 
 class EmailBackend(_AssopyBackend):
     def authenticate(self, email=None, password=None):

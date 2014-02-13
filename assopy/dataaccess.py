@@ -15,11 +15,14 @@ def user_data(u):
     }
 
 def user_identities(u):
-    return [{
-        'provider': i.provider,
-        'identifier': i.identifier,
-        } for i in u.assopy_user.identities.all()]
-        
+    try:
+        return [{
+            'provider': i.provider,
+            'identifier': i.identifier,
+            } for i in u.assopy_user.identities.all()]
+    except:
+        return []
+
 def user_tickets(u):
     qs = Ticket.objects\
         .filter(user=u)\
