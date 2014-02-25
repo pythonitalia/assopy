@@ -231,6 +231,7 @@ def _linkProfileToEmail(email, profile):
         log.debug('the current user "%s" will become an assopy user', current)
         user = models.User(user=current)
         user.save()
+    profile['email'] = email
     log.debug('a new identity (for "%s") will be linked to "%s"', profile['identifier'], current)
     identity = models.UserIdentity.objects.create_from_profile(user, profile)
     return identity
