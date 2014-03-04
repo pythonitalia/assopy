@@ -514,7 +514,7 @@ def invoice(request, order_code, code, mode='html'):
                 .get(conference_start__year=order.created.year).code
         except Conference.DoesNotExist:
             conf = order.created.year
-        fname = '[%s invoice] %s.pdf' % (conf, invoice.code.replace('/', '-'))
+        fname = '%s-invoice-%s.pdf' % (conf, invoice.code.replace('/', '-'))
 
         response = http.HttpResponse(raw, mimetype='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="%s"' % fname
