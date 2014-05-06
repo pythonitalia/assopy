@@ -3,7 +3,8 @@ from django import forms
 from django.contrib import auth
 from django.conf import settings as dsettings
 from django.db import transaction
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 
 from assopy import models
 from assopy import settings
@@ -40,9 +41,9 @@ class LoginForm(auth.forms.AuthenticationForm):
             user = auth.authenticate(email=data['email'], password=data['password'])
             self.user_cache = user
             if user is None:
-                raise forms.ValidationError('Invalid credentials')
+                raise forms.ValidationError(ugettext('Invalid credentials'))
             elif not user.is_active:
-                raise forms.ValidationError('This account is inactive.')
+                raise forms.ValidationError(ugettext('This account is inactive.'))
         return data
 
 class PasswordResetForm(auth.forms.PasswordResetForm):
@@ -131,7 +132,7 @@ class BillingData(forms.ModelForm):
         except:
             pass
         if not data:
-            raise forms.ValidationError('this field is required')
+            raise forms.ValidationError(ugettext('this field is required'))
         return data
 
     clean_country = lambda self: self._required('country')
@@ -150,13 +151,13 @@ class NewAccountForm(forms.Form):
     first_name = forms.CharField(max_length=32)
     last_name = forms.CharField(max_length=32)
     email = forms.EmailField()
-    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
-    password2 = forms.CharField(label="Confirm password", widget=forms.PasswordInput)
+    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+    password2 = forms.CharField(label=_("Confirm password"), widget=forms.PasswordInput)
 
     def clean_email(self):
         email = self.cleaned_data['email']
         if auth.models.User.objects.filter(email__iexact=email).count() > 0:
-            raise forms.ValidationError('email aready in use')
+            raise forms.ValidationError(ugettext('email aready in use'))
         return email
 
     def clean(self):
@@ -164,14 +165,16 @@ class NewAccountForm(forms.Form):
             return super(NewAccountForm, self).clean()
         data = self.cleaned_data
         if data['password1'] != data['password2']:
-            raise forms.ValidationError('password mismatch')
+            raise forms.ValidationError(ugettext('password mismatch'))
         return data
 
 NewAccountForm = autostrip(NewAccountForm)
 
 class FormTickets(forms.Form):
-    payment = forms.ChoiceField(choices=(('paypal', 'PayPal'),('bank', 'Bank')))
-    order_type = forms.ChoiceField(choices=(('non-deductible', 'Personal Purchase'), ('deductible', 'Company Purchase')), initial='non-deductible')
+    payment = forms.ChoiceField(choices=(('paypal', _('PayPal')),('bank', _('Bank'))))
+    order_type = forms.ChoiceField(choices=(('non-deductible', _('Personal Purchase')),
+                                            ('deductible', _('Company Purchase'))),
+                                   initial='non-deductible')
 
     def __init__(self, *args, **kwargs):
         super(FormTickets, self).__init__(*args, **kwargs)
@@ -210,17 +213,17 @@ class FormTickets(forms.Form):
 
 class RefundItemForm(forms.Form):
     reason = forms.CharField(
-        label="Reason",
+        label=_("Reason"),
         max_length=200,
-        help_text="""Please enter the reason of your refund request""",
+        help_text=_("""Please enter the reason of your refund request"""),
         widget=forms.Textarea)
     paypal = forms.EmailField(
-        label="Your paypal address",
-        help_text="""If you prefer to receive payment via paypal""",
+        label=_("Your paypal address"),
+        help_text=_("""If you prefer to receive payment via paypal"""),
         required=False)
     bank = forms.CharField(
-        label="Bank routing information",
-        help_text="""Please specify IBAN, BIC and bank address (if in Europe) or any needed information for a worldwide transfer""",
+        label=_("Bank routing information"),
+        help_text=_("""Please specify IBAN, BIC and bank address (if in Europe) or any needed information for a worldwide transfer"""),
         required=False,
         widget=forms.Textarea)
 
@@ -232,7 +235,7 @@ class RefundItemForm(forms.Form):
         data = self.cleaned_data
         if self.item.refund_type() == 'payment':
             if not data.get('paypal') and not data.get('bank'):
-                raise forms.ValidationError('Please specify at least one of the paypal account or the bank details')
+                raise forms.ValidationError(ugettext('Please specify at least one of the paypal account or the bank details'))
         return data
 
 if 'paypal.standard.ipn' in dsettings.INSTALLED_APPS:

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-06 20:15+0100\n"
-"PO-Revision-Date: 2014-03-07 09:04+0100\n"
+"POT-Creation-Date: 2014-05-06 09:51+0200\n"
+"PO-Revision-Date: 2014-05-06 09:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,19 @@ msgstr ""
 "X-Translated-Using: django-rosetta 0.7.0\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: forms.py:89
+#: forms.py:44 templates/registration/login.html:70
+msgid "Invalid credentials"
+msgstr "Credenziali non valide per l'accesso"
+
+#: forms.py:46
+msgid "This account is inactive."
+msgstr "Questo account non è attivo"
+
+#: forms.py:90
 msgid "First Name"
 msgstr "Nome"
 
-#: forms.py:90
+#: forms.py:91
 msgid ""
 "Please do not enter a company name here.<br />You will be able to specify "
 "billing details during the checkout."
@@ -30,9 +38,77 @@ msgstr ""
 "Inserisci il tuo nome, non quello dell'azienda. Potrai specificare "
 "successivamente i dati di fatturazione."
 
-#: forms.py:93
+#: forms.py:94
 msgid "Last Name"
 msgstr "Cognome"
+
+#: forms.py:135
+msgid "this field is required"
+msgstr "Campo obbligatorio"
+
+#: forms.py:154
+msgid "Password"
+msgstr "Password"
+
+#: forms.py:155
+msgid "Confirm password"
+msgstr "Conferma password"
+
+#: forms.py:160
+msgid "email aready in use"
+msgstr "email già in uso"
+
+#: forms.py:168
+msgid "password mismatch"
+msgstr "password non coincidono"
+
+#: forms.py:174
+msgid "PayPal"
+msgstr "PayPal"
+
+#: forms.py:174
+msgid "Bank"
+msgstr "Banca"
+
+#: forms.py:175
+msgid "Personal Purchase"
+msgstr "Acquisto Personale"
+
+#: forms.py:176
+msgid "Company Purchase"
+msgstr "Acquisto Aziendale"
+
+#: forms.py:216
+msgid "Reason"
+msgstr "Ragione"
+
+#: forms.py:218
+msgid "Please enter the reason of your refund request"
+msgstr "Inserisci il motivo della tua richeista di risarcimento"
+
+#: forms.py:221
+msgid "Your paypal address"
+msgstr "Il tuo indirizzo paypal"
+
+#: forms.py:222
+msgid "If you prefer to receive payment via paypal"
+msgstr "Se preferisci ricevere il pagamento via paypal"
+
+#: forms.py:225
+msgid "Bank routing information"
+msgstr "Coordinate bancarie"
+
+#: forms.py:226
+msgid ""
+"Please specify IBAN, BIC and bank address (if in Europe) or any needed "
+"information for a worldwide transfer"
+msgstr ""
+"Specifica IBAN, BIC ed indirizzo dell'istituot di credo (se in Europa) o "
+"altra informazione necessaria per un trasferimento."
+
+#: forms.py:238
+msgid "Please specify at least one of the paypal account or the bank details"
+msgstr "Specifica almeno un account paypal o le informazione sulla banca"
 
 #: models.py:69
 msgid "ISO alpha-2"
@@ -292,10 +368,6 @@ msgstr ""
 "<p><i>Esempio</i>: puoi fare login con il tuo account Gmail per\n"
 "acquistare biglietti, ma il tuo Nickname non verrà riportato in alcun\n"
 "modo nei dati di fatturazione.</p>"
-
-#: templates/registration/login.html:70
-msgid "Invalid credentials"
-msgstr "Credenziali non valide per l'accesso"
 
 #: templates/registration/login.html:92
 msgid "Don&#8217;t you have an account?"

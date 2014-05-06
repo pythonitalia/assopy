@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-06 20:15+0100\n"
+"POT-Creation-Date: 2014-05-06 09:51+0200\n"
 "PO-Revision-Date: 2011-04-07 17:18\n"
 "Last-Translator: Francesco Pallanti <fpallanti@develer.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,92 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Translated-Using: django-rosetta 0.5.3\n"
 
-#: forms.py:89
-msgid "First Name"
+#: forms.py:44 templates/registration/login.html:70
+msgid "Invalid credentials"
+msgstr ""
+
+#: forms.py:46
+msgid "This account is inactive."
 msgstr ""
 
 #: forms.py:90
+msgid "First Name"
+msgstr ""
+
+#: forms.py:91
 msgid ""
 "Please do not enter a company name here.<br />You will be able to specify "
 "billing details during the checkout."
 msgstr ""
 
-#: forms.py:93
+#: forms.py:94
 msgid "Last Name"
+msgstr ""
+
+#: forms.py:135
+msgid "this field is required"
+msgstr ""
+
+#: forms.py:154
+msgid "Password"
+msgstr ""
+
+#: forms.py:155
+msgid "Confirm password"
+msgstr ""
+
+#: forms.py:160
+msgid "email aready in use"
+msgstr ""
+
+#: forms.py:168
+msgid "password mismatch"
+msgstr ""
+
+#: forms.py:174
+msgid "PayPal"
+msgstr ""
+
+#: forms.py:174
+msgid "Bank"
+msgstr ""
+
+#: forms.py:175
+msgid "Personal Purchase"
+msgstr ""
+
+#: forms.py:176
+msgid "Company Purchase"
+msgstr ""
+
+#: forms.py:216
+msgid "Reason"
+msgstr ""
+
+#: forms.py:218
+msgid "Please enter the reason of your refund request"
+msgstr ""
+
+#: forms.py:221
+msgid "Your paypal address"
+msgstr ""
+
+#: forms.py:222
+msgid "If you prefer to receive payment via paypal"
+msgstr ""
+
+#: forms.py:225
+msgid "Bank routing information"
+msgstr ""
+
+#: forms.py:226
+msgid ""
+"Please specify IBAN, BIC and bank address (if in Europe) or any needed "
+"information for a worldwide transfer"
+msgstr ""
+
+#: forms.py:238
+msgid "Please specify at least one of the paypal account or the bank details"
 msgstr ""
 
 #: models.py:69
@@ -252,10 +326,6 @@ msgid ""
 "You will be able to specify billing and personal info later; e.g.: you can "
 "use your personal Facebook account to buy tickets for your company and the "
 "Facebook name will not appear anywhere."
-msgstr ""
-
-#: templates/registration/login.html:70
-msgid "Invalid credentials"
 msgstr ""
 
 #: templates/registration/login.html:92
