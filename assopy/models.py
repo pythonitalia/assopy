@@ -753,9 +753,9 @@ def _order_feedback(sender, **kwargs):
 order_created.connect(_order_feedback)
 
 class InvoiceLog(models.Model):
-    code =  models.CharField(max_length=20, unique=True)
-    order = models.ForeignKey(Order, null=True)
-    invoice = models.ForeignKey('Invoice', null=True)
+    code = models.CharField(max_length=20, unique=True)
+    order = models.ForeignKey(Order, blank=True, null=True)
+    invoice = models.ForeignKey('Invoice', blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
 class InvoiceManager(models.Manager):
@@ -837,7 +837,10 @@ class InvoiceManager(models.Manager):
             order.save()
 
             invoices = []
-            vat_list = invoices_code(order, fake=payment_date is None)
+
+            fake = not order.orderitem_set.filter(ticket__fare__recipient_type='c').exists()
+
+            vat_list = invoices_code(order, fake=fake)
 
             emit_date = payment_date or datetime.now()
 
