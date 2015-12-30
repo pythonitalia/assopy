@@ -167,15 +167,11 @@ def render_janrain_box(context, next=None, mode='embed'):
         # l'utente una volta loggato
         if next:
             context['request'].session['jr_next'] = next
-        domain = settings.JANRAIN['domain']
-        if not domain.endswith('/'):
-            domain += '/'
-        u = '%sopenid/embed?token_url=%s' % (domain, urllib.quote_plus(dsettings.DEFAULT_URL_PREFIX + reverse('assopy-janrain-token')))
+        u = dsettings.DEFAULT_URL_PREFIX + reverse('assopy-janrain-token')
     else:
         u = None
     return {
-        'url': u,
-        'mode': mode,
+        'token_url': u,
     }
 
 class TNode(template.Node):
