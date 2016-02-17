@@ -696,7 +696,7 @@ if not settings.GENRO_BACKEND:
             columns = (
                     'numero', 'Card name',
                     'Customer:tipo IVA', 'Customer:Customer Type',
-                    'Codice Fiscale', 'Partita IVA', 'Nazione',
+                    'Codice Fiscale', 'Partita IVA', 'Indirizzo', 'Nazione',
                     'prezzo netto', 'IVA', 'Gross Price',
                     'Invoice Date', 'Payment date',
                     'Deposit Invoice', 'SIM Invoice', 'Voucher Invoice',
@@ -718,6 +718,7 @@ if not settings.GENRO_BACKEND:
                     'Customer:Customer Type': '',
                     'Codice Fiscale': i.order.cf_code,
                     'Partita IVA': i.order.vat_number,
+                    'Indirizzo': i.order.address,
                     'Nazione': i.order.country_id,
                     'prezzo netto': '%.2f' % i.net_price(),
                     'IVA': '%.2f' % i.vat_value(),
