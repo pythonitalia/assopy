@@ -704,7 +704,7 @@ if not settings.GENRO_BACKEND:
 
             def e(d):
                 for k, v in d.items():
-                    d[k] = v.encode('utf-8')
+                    d[k] = v.encode('utf-8') if v is not None else ''
                 return d
 
             ofile = StringIO()
