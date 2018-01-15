@@ -5,7 +5,7 @@ from assopy import settings
 if settings.GENRO_BACKEND:
     from assopy.clients import genro, vies
 from assopy.utils import check_database_schema, send_email
-from conference.models import Ticket
+from conference.models import Ticket, Fare
 from email_template import utils
 
 from django import dispatch
@@ -17,6 +17,10 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
+
+from python_18app import voucher_value
+from assopy.clients.app18 import app18_client
+
 
 import re
 import os
@@ -431,12 +435,37 @@ class OrderManager(models.Manager):
             t = qs.aggregate(t=models.Sum('price'))['t']
             return t if t is not None else 0
 
-    def create(self, user, payment, items, billing_notes='', coupons=None, country=None, address=None, vat_number='', cf_code='', remote=True):
+    def _apply_18app(self, code, value, order):
+        fares = Fare.objects.exclude(recipient_type='c')
+        apply_to = order.rows(include_discounts=False)
+        if fares.exists():
+            apply_to = apply_to.filter(ticket__fare__in=fares)
+
+        total = sum(x.price for x in apply_to)
+        discount = Decimal(value)
+        if discount > total:
+            discount = total
+        if discount > order.total():
+            discount = order.total()
+        discount = -1 * discount
+        if not discount:
+            return None
+        item = OrderItem(order=order, ticket=None, vat=apply_to[0].vat)
+        item.code = code
+        item.description = 'Voucher 18App'
+        item.price = discount
+        return item
+
+    def create(self, user, payment, items, billing_notes='', coupons=None, country=None, address=None, vat_number='', cf_code='', remote=True, app18=None):
         if coupons:
             for c in coupons:
                 if not c.valid(user):
                     log.warn('Invalid coupon: %s', c.code)
                     raise ValueError(c)
+        if app18:
+            if not voucher_value(app18_client(), app18['code']):
+                log.warn('Invalid 18app voucher: %s', app18['code'])
+                raise ValueError('Invalid 18app voucher: %s', app18['code'])
 
         log.info('new order for "%s" via "%s": %d items', user.name(), payment, sum(x[1]['qty'] for x in items))
         # Genero un save point almeno isolo la transazione
@@ -489,6 +518,12 @@ class OrderManager(models.Manager):
                     item.price = row_price
                     item.save()
         tickets_total = o.total()
+
+        if app18:
+            item = self._apply_18app(app18['code'], app18['value'], o)
+            if item:
+                item.save()
+                log.debug('18app voucher "%s" applied, discount=%s, vat=%s', app18['code'], app18['value'], item.vat)
         if coupons:
             # applico i coupon in due passi:
             #   1. applico i coupon a percentuale sempre rispetto al totale
@@ -653,7 +688,7 @@ class Order(models.Model):
             return qs.exclude(ticket=None)
 
     @classmethod
-    def calculator(self, items, coupons=None, user=None):
+    def calculator(self, items, coupons=None, user=None, app18=None):
         """
         calcola l'importo di un ordine non ancora effettuato tenendo conto di
         eventuali coupons.
@@ -662,6 +697,7 @@ class Order(models.Model):
         totals = {
             'tickets': [],
             'coupons': {},
+            'app18': (0, {}),
             'total': 0,
         }
         tickets_total = 0
@@ -679,6 +715,13 @@ class Order(models.Model):
                         if result is not None:
                             totals['coupons'][c.code] = (result, c)
                             total += result
+        if app18:
+            for fare, qty in items:
+                if fare.recipient_type != 'c':
+                    result = - app18['value']
+                    totals['app18'] = (result, app18)
+                    total += result
+                    break
         totals['total'] = total
         return totals
 
@@ -686,6 +729,7 @@ class Order(models.Model):
         for item in self.orderitem_set.all():
             item.delete()
         super(Order, self).delete(**kwargs)
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order)
