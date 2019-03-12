@@ -618,6 +618,20 @@ class Order(models.Model):
     country = models.ForeignKey(Country, verbose_name=_('Country'), null=True)
     address = models.CharField(_('Address'), max_length=150, blank=True)
 
+    # electronic invoicing
+
+    recipient_code = models.CharField(
+        'Codice Destinatario',
+        max_length=7,
+        blank=True,
+        help_text='Codice destinatario per la fattura elettronica'
+    )
+    pec_address = models.EmailField(
+        'PEC',
+        blank=True,
+        help_text='Indirizzo PEC per la fattura elettronica'
+    )
+
     objects = OrderManager()
 
     def __unicode__(self):
