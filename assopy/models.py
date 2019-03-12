@@ -197,21 +197,6 @@ class User(models.Model):
     cf_code = models.CharField(
         'Codice Fiscale', max_length=16, blank=True,
         help_text=_('Needed only for Italian customers'))
-
-    # electronic invoicing
-
-    recipient_code = models.CharField(
-        'Codice Destinatario',
-        max_length=7,
-        blank=True,
-        help_text='Codice destinatario per la fattura elettronica'
-    )
-    pec_address = models.EmailField(
-        'PEC',
-        blank=True,
-        help_text='Indirizzo PEC per la fattura elettronica'
-    )
-
     country = models.ForeignKey(Country, verbose_name=_('Country'), null=True, blank=True)
     address = models.CharField(
         _('Address and City'),
